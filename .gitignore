@@ -46,3 +46,7 @@ out/
 .claude/
 .agents/
 skills-lock.json
+compose.yaml
+docs/
+k6/
+outbox-connector*.json
