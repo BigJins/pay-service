@@ -1,0 +1,52 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3308}/${DB_NAME:paydb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: ${DB_USER:pay}
+    password: ${DB_PASSWORD:pay222}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  application.name: pay-service
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  docker:
+    compose:
+      lifecycle-management: start_only
+  kafka:
+    bootstrap-servers: localhost:19092,localhost:19093,localhost:19094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+toss:
+  secret-key: ${TOSS_SECRET_KEY:stub-key}
+  base-url: https://api.tosspayments.com
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,refresh
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles:
+        http.server.requests: 0.95, 0.99
+      percentiles-histogram:
+        http.server.requests: true

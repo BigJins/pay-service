@@ -1,0 +1,3 @@
+toss:
+  secret-key: test_sk_dummy
+  base-url: https://api.tosspayments.com
